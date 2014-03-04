@@ -126,6 +126,8 @@ settings_adapter = {
     'taobao': 'add_taobao_login_from_settings',
     'twitter': 'add_twitter_login_from_settings',
     'weibo': 'add_weibo_login_from_settings',
+    'openid': 'add_openid_login_from_settings',
+    'yahoo': 'add_yahoo_login_from_settings',
 }
 
 

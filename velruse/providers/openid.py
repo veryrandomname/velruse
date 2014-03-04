@@ -11,6 +11,8 @@ from pyramid.request import Response
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import NO_PERMISSION_REQUIRED
 
+from ..settings import ProviderSettings
+
 from ..api import (
     AuthenticationComplete,
     AuthenticationDenied,
@@ -78,6 +80,18 @@ class OpenIDAuthenticationComplete(AuthenticationComplete):
 
 def includeme(config):
     config.add_directive('add_openid_login', add_openid_login)
+    config.add_directive('add_openid_login_from_settings',
+                         add_openid_login_from_settings)
+
+
+def add_openid_login_from_settings(config, prefix='velruse.openid.'):
+    settings = config.registry.settings
+    p = ProviderSettings(settings, prefix)
+    p.update('realm')
+    p.update('storage')
+    p.update('login_path')
+    p.update('callback_path')
+    config.add_openid_login(**p.kwargs)
 
 
 def add_openid_login(config,

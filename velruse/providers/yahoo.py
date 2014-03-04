@@ -9,6 +9,8 @@ from pyramid.security import NO_PERMISSION_REQUIRED
 
 from ..api import register_provider
 from ..compat import parse_qsl
+from ..settings import ProviderSettings
+
 
 from .oid_extensions import OAuthRequest
 from .openid import (
@@ -29,6 +31,20 @@ class YahooAuthenticationComplete(OpenIDAuthenticationComplete):
 
 def includeme(config):
     config.add_directive('add_yahoo_login', add_yahoo_login)
+    config.add_directive('add_yahoo_login_from_settings',
+                         add_yahoo_login_from_settings)
+
+
+def add_yahoo_login_from_settings(config, prefix='velruse.yahoo.'):
+    settings = config.registry.settings
+    p = ProviderSettings(settings, prefix)
+    p.update('realm')
+    p.update('storage')
+    p.update('consumer_key', required=True)
+    p.update('consumer_secret', required=True)
+    p.update('login_path')
+    p.update('callback_path')
+    config.add_yahoo_login(**p.kwargs)
 
 
 def add_yahoo_login(config,
